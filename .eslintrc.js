@@ -45,6 +45,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "no-var": "error",
     "prettier/prettier": "error",
+    "comma-dangle": ["error", "only-multiline"],
     // 禁止出现console
     "no-console": "warn",
     // 禁用debugger
@@ -126,7 +127,7 @@ module.exports = {
     // 禁止出现多行空行
     "no-multiple-empty-lines": "warn",
     // 禁止出现;
-    semi: [2, "always"],
+    semi: [0, "always"],
     // 强制在块之前使用一致的空格
     "space-before-blocks": "warn",
     // 强制在 function的左括号之前使用一致的空格
@@ -138,7 +139,7 @@ module.exports = {
     // 强制在一元操作符前后使用一致的空格
     "space-unary-ops": "warn",
     // 强制在注释中 // 或 /* 使用一致的空格
-    // "spaced-comment": "warn",
+    "spaced-comment": "error",
     // 强制在 switch 的冒号左右有空格
     "switch-colon-spacing": "warn",
     // 强制箭头函数的箭头前后使用一致的空格

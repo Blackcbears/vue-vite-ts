@@ -1,12 +1,12 @@
-import { defineStore } from "pinia";
-import { store } from "@/store";
-import projectSetting from "@/settings/projectSetting";
 import {
   ICrumbsSetting,
   IHeaderSetting,
   IMenuSetting,
   IMultiTabsSetting,
 } from "@/settings/config";
+import projectSetting from "@/settings/projectSetting";
+import { store } from "@/store";
+import { defineStore } from "pinia";
 
 const {
   navMode,
@@ -23,16 +23,16 @@ const {
 } = projectSetting;
 
 interface ProjectSettingState {
-  navMode: string; //导航模式
-  navTheme: string; //导航风格
-  headerSetting: IHeaderSetting; //顶部设置
-  showFooter: boolean; //页脚
-  menuSetting: IMenuSetting; //多标签
-  multiTabsSetting: IMultiTabsSetting; //多标签
-  crumbsSetting: ICrumbsSetting; //面包屑
-  permissionMode: string; //权限模式
-  isPageAnimate: boolean; //是否开启路由动画
-  pageAnimateType: string; //路由动画类型
+  navMode: string; // 导航模式
+  navTheme: string; // 导航风格
+  headerSetting: IHeaderSetting; // 顶部设置
+  showFooter: boolean; // 页脚
+  menuSetting: IMenuSetting; // 多标签
+  multiTabsSetting: IMultiTabsSetting; // 多标签
+  crumbsSetting: ICrumbsSetting; // 面包屑
+  permissionMode: string; // 权限模式
+  isPageAnimate: boolean; // 是否开启路由动画
+  pageAnimateType: string; // 路由动画类型
   isMobile: boolean; // 是否处于移动端模式
 }
 

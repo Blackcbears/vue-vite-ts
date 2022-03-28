@@ -56,7 +56,7 @@ export class VAxios {
    */
   request<T = any>(
     config: AxiosRequestConfig,
-    options?: RequestOptions
+    options?: RequestOptions,
   ): Promise<T> {
     let conf: AxiosRequestConfig = cloneDeep(config);
     const transform = this.getTransform();
@@ -71,7 +71,7 @@ export class VAxios {
       conf = beforeRequestHook(conf, opt);
     }
 
-    //这里重新 赋值成最新的配置
+    // 这里重新 赋值成最新的配置
     // @ts-ignore
     conf.requestOptions = opt;
 

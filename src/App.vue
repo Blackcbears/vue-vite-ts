@@ -1,17 +1,45 @@
-<script setup lang="ts"></script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <router-view />
+  <n-config-provider
+    :locale="zhCN"
+    :theme="getDarkTheme"
+    :theme-overrides="getThemeOverrides"
+    :date-locale="dateZhCN"
+  >
+    <AppProvider>
+      <RouterView />
+    </AppProvider>
+  </n-config-provider>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<script lang="ts" setup>
+import { AppProvider } from "@/components/Application";
+import { useDesignSettingStore } from "@/store/modules/designSetting";
+import { lighten } from "@/utils";
+import { darkTheme, dateZhCN, zhCN } from "naive-ui";
+import { computed } from "vue";
+
+const designStore = useDesignSettingStore();
+
+/**
+ * @type import('naive-ui').GlobalThemeOverrides
+ */
+const getThemeOverrides = computed(() => {
+  const appTheme = designStore.appTheme;
+  const lightenStr = lighten(designStore.appTheme, 6);
+  return {
+    common: {
+      primaryColor: appTheme,
+      primaryColorHover: lightenStr,
+      primaryColorPressed: lightenStr,
+    },
+    LoadingBar: {
+      colorLoading: appTheme,
+    },
+  };
+});
+const getDarkTheme = computed(() =>
+  designStore.darkTheme ? darkTheme : undefined
+);
+</script>
+
+<style lang="sass"></style>
