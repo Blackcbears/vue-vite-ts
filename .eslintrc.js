@@ -46,6 +46,12 @@ module.exports = {
     "no-var": "error",
     "prettier/prettier": "error",
     "comma-dangle": ["error", "only-multiline"],
+    "vue/multi-word-component-names": [
+      "error",
+      {
+        ignores: [],
+      },
+    ],
     // 禁止出现console
     "no-console": "warn",
     // 禁用debugger

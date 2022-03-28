@@ -1,8 +1,10 @@
 <template>
   <n-loading-bar-provider>
     <n-dialog-provider>
+      <DialogContent />
       <n-notification-provider>
         <n-message-provider>
+          <MessageContent />
           <slot />
         </n-message-provider>
       </n-notification-provider>
@@ -17,4 +19,6 @@ import {
   NMessageProvider,
   NLoadingBarProvider,
 } from "naive-ui";
+import { MessageContent } from "@/components/MessageContent";
+import { DialogContent } from "@/components/DialogContent";
 </script>

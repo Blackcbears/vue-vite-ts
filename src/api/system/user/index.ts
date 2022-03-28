@@ -8,18 +8,7 @@
 import { http } from "@/utils/http/axios";
 import { RequestEnum } from "@/enums/httpEnum";
 import { ILoginParams, ILoginRequest } from "@/api/system/user/types";
-
-export interface BasicResponseModel<T = any> {
-  code: number;
-  message: string;
-  result: T;
-}
-
-export interface BasicPageParams {
-  pageNumber: number;
-  pageSize: number;
-  total: number;
-}
+import { BasicResponseModel } from "@/api/type";
 
 /**
  * @description: 获取用户信息

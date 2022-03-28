@@ -19,7 +19,7 @@ export * from "./axiosTransform";
  */
 export class VAxios {
   private axiosInstance: AxiosInstance;
-  private options: CreateAxiosOptions;
+  private readonly options: CreateAxiosOptions;
 
   constructor(options: CreateAxiosOptions) {
     this.options = options;
@@ -56,7 +56,7 @@ export class VAxios {
    */
   request<T = any>(
     config: AxiosRequestConfig,
-    options?: RequestOptions,
+    options?: RequestOptions
   ): Promise<T> {
     let conf: AxiosRequestConfig = cloneDeep(config);
     const transform = this.getTransform();

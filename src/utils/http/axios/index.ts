@@ -16,9 +16,8 @@ import { setObjToUrlParams } from "@/utils/urlUtils";
 import { CreateAxiosOptions, RequestOptions, Result } from "./types";
 
 import { useUserStoreWidthOut } from "@/store/modules/user";
-import router from "@/router/router";
+import router from "@/router";
 import { storage } from "@/utils/Storage";
-import { useDialog, useMessage } from "naive-ui";
 
 const globSetting = useGlobSetting();
 const urlPrefix = globSetting.urlPrefix || "";
@@ -56,8 +55,8 @@ const transform: AxiosTransform = {
 
     const { data } = res;
 
-    const $dialog = useDialog();
-    const $message = useMessage();
+    const $dialog = window.$dialog;
+    const $message = window.$message;
 
     if (!data) {
       // return '[HTTP] Request has no return value';
@@ -102,9 +101,10 @@ const transform: AxiosTransform = {
         $message.error(errorMsg);
         break;
       // 登录超时
-      case ResultEnum.TIMEOUT:
-        const LoginName = PageEnum.BASE_LOGIN_NAME;
-        const LoginPath = PageEnum.BASE_LOGIN;
+      case ResultEnum.TIMEOUT: {
+        const LoginName = PageEnum.BASE_LOGIN_NAME,
+          LoginPath = PageEnum.BASE_LOGIN;
+
         if (router.currentRoute.value?.name === LoginName) {
           return;
         }
@@ -114,7 +114,7 @@ const transform: AxiosTransform = {
           title: "提示",
           content: "登录身份已失效，请重新登录!",
           positiveText: "确定",
-          //negativeText: '取消',
+          // negativeText: '取消',
           closable: false,
           maskClosable: false,
           onPositiveClick: () => {
@@ -123,6 +123,9 @@ const transform: AxiosTransform = {
           },
           onNegativeClick: () => {},
         });
+        break;
+      }
+      default:
         break;
     }
     throw new Error(errorMsg);
@@ -196,9 +199,12 @@ const transform: AxiosTransform = {
     // 请求之前处理config
     const userStore = useUserStoreWidthOut();
     const token = userStore.getToken;
-    if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
+    if (
+      token &&
+      (config as Record<string, any>)?.requestOptions?.withToken !== false
+    ) {
       // jwt token
-      (config as Recordable).headers.Authorization =
+      (config as Record<string, any>).headers.Authorization =
         options.authenticationScheme
           ? `${options.authenticationScheme} ${token}`
           : token;
@@ -210,8 +216,8 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (error: any) => {
-    const $dialog = useDialog();
-    const $message = useMessage();
+    const $dialog = window.$dialog;
+    const $message = window.$message;
     const { response, code, message } = error || {};
     // TODO 此处要根据后端接口返回格式修改
     const msg: string =
@@ -229,7 +235,7 @@ const transform: AxiosTransform = {
           title: "网络异常",
           content: "请检查您的网络连接是否正常",
           positiveText: "确定",
-          //negativeText: '取消',
+          // negativeText: '取消',
           closable: false,
           maskClosable: false,
           onPositiveClick: () => {},
@@ -245,9 +251,9 @@ const transform: AxiosTransform = {
     if (!isCancel) {
       checkStatus(error.response && error.response.status, msg);
     } else {
-      console.warn(error, "请求被取消！");
+      new Error("请求被取消！" + error);
     }
-    //return Promise.reject(error);
+    // return Promise.reject(error);
     return Promise.reject(response?.data);
   },
 };

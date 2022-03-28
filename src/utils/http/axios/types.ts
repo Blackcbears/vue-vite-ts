@@ -10,7 +10,7 @@ export interface CreateAxiosOptions extends AxiosRequestConfig {
 // 上传文件
 export interface UploadFileParams {
   // 其他参数
-  data?: Recordable;
+  data?: Record<string, any>;
   // 文件参数接口字段名
   name?: string;
   // 文件
@@ -52,7 +52,7 @@ export interface RequestOptions {
   isTransformResponse?: boolean;
   // 是否返回原生响应头
   isReturnNativeResponse?: boolean;
-  //忽略重复请求
+  // 忽略重复请求
   ignoreCancelToken?: boolean;
   // 是否携带token
   withToken?: boolean;
