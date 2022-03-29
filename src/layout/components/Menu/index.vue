@@ -80,7 +80,7 @@ export default defineComponent({
     });
 
     const getSelectedKeys = computed(() => {
-      let location = props.location;
+      const location = props.location;
       return location === "left" ||
         (location === "header" && unref(navMode) === "horizontal")
         ? unref(selectedKeys)
@@ -124,7 +124,7 @@ export default defineComponent({
       if (!settingStore.menuSetting.mixMenu) {
         menus.value = generatorMenu(asyncRouteStore.getMenus);
       } else {
-        //混合菜单
+        // 混合菜单
         const firstRouteName: string =
           (currentRoute.matched[0].name as string) || "";
         menus.value = generatorMenuMix(
@@ -149,9 +149,11 @@ export default defineComponent({
       emit("clickMenuItem" as any, key);
     }
 
-    //展开菜单
+    // 展开菜单
     function menuExpanded(openKeys: string[]) {
-      if (!openKeys) return;
+      if (!openKeys) {
+        return;
+      }
       const latestOpenKey = openKeys.find(
         (key) => state.openKeys.indexOf(key) === -1
       );
@@ -163,9 +165,11 @@ export default defineComponent({
         : openKeys;
     }
 
-    //查找是否存在子路由
+    // 查找是否存在子路由
     function findChildrenLen(key: string) {
-      if (!key) return false;
+      if (!key) {
+        return false;
+      }
       const subRouteChildren: string[] = [];
       for (const { children, key } of unref(menus)) {
         if (children && children.length) {

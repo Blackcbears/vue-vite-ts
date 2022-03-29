@@ -89,41 +89,40 @@
 </template>
 
 <script lang="ts">
+import { PageEnum } from "@/enums/pageEnum";
+import { useDesignSetting } from "@/hooks/setting/useDesignSetting";
+import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
+import { useAsyncRouteStore } from "@/store/modules/asyncRoute";
+import { useProjectSettingStore } from "@/store/modules/projectSetting";
+import { RouteItem, useTabsViewStore } from "@/store/modules/tabsView";
+import { TABS_ROUTES } from "@/store/mutation-types";
+import { renderIcon } from "@/utils";
+import { storage } from "@/utils/Storage";
 import {
-  defineComponent,
-  reactive,
+  CloseOutlined,
+  ColumnWidthOutlined,
+  DownOutlined,
+  LeftOutlined,
+  MinusOutlined,
+  ReloadOutlined,
+  RightOutlined,
+} from "@vicons/antd";
+import elementResizeDetectorMaker from "element-resize-detector";
+import { useMessage, useThemeVars } from "naive-ui";
+import {
   computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  provide,
+  reactive,
   ref,
   toRefs,
   unref,
-  provide,
   watch,
-  onMounted,
-  nextTick,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { storage } from "@/utils/Storage";
-import { TABS_ROUTES } from "@/store/mutation-types";
-import { useTabsViewStore } from "@/store/modules/tabsView";
-import { useAsyncRouteStore } from "@/store/modules/asyncRoute";
-import { RouteItem } from "@/store/modules/tabsView";
-import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
-import { useMessage, useThemeVars } from "naive-ui";
+import { RouteLocationNormalizedLoaded, useRoute, useRouter } from "vue-router";
 import Draggable from "vuedraggable";
-import { PageEnum } from "@/enums/pageEnum";
-import {
-  DownOutlined,
-  ReloadOutlined,
-  CloseOutlined,
-  ColumnWidthOutlined,
-  MinusOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from "@vicons/antd";
-import { renderIcon } from "@/utils";
-import elementResizeDetectorMaker from "element-resize-detector";
-import { useDesignSetting } from "@/hooks/setting/useDesignSetting";
-import { useProjectSettingStore } from "@/store/modules/projectSetting";
 
 export default defineComponent({
   name: "TabsView",
@@ -180,7 +179,9 @@ export default defineComponent({
     });
 
     // 获取简易的路由对象
-    const getSimpleRoute = (route): RouteItem => {
+    const getSimpleRoute = (
+      route: RouteLocationNormalizedLoaded
+    ): RouteItem => {
       const { fullPath, hash, meta, name, params, path, query } = route;
       return { fullPath, hash, meta, name, params, path, query };
     };
@@ -189,7 +190,7 @@ export default defineComponent({
       const mixMenu = settingStore.menuSetting.mixMenu;
       const currentRoute = useRoute();
       const navMode = unref(getNavMode);
-      if (unref(navMode) != "horizontal-mix") {
+      if (unref(navMode) !== "horizontal-mix") {
         return true;
       }
       return !(
@@ -283,11 +284,10 @@ export default defineComponent({
         document.documentElement.scrollTop ||
         window.pageYOffset ||
         document.body.scrollTop; // 滚动条偏移量
-      state.isMultiHeaderFixed = !!(
+      state.isMultiHeaderFixed =
         !getHeaderSetting.value.fixed &&
         getMultiTabsSetting.value.fixed &&
-        scrollTop >= 64
-      );
+        scrollTop >= 64;
     }
 
     window.addEventListener("scroll", onScroll, true);
@@ -306,7 +306,7 @@ export default defineComponent({
     };
 
     // 标签页列表
-    const tabsList: any = computed(() => tabsViewStore.tabsList);
+    const tabsList = computed(() => tabsViewStore.tabsList);
     const whiteList: string[] = [
       PageEnum.BASE_LOGIN_NAME,
       PageEnum.REDIRECT_NAME,
@@ -332,7 +332,7 @@ export default defineComponent({
     });
 
     // 关闭当前页面
-    const removeTab = (route) => {
+    const removeTab = (route: RouteItem) => {
       if (tabsList.value.length === 1) {
         return message.warning("这已经是最后一页，不能再关闭了！");
       }
@@ -360,7 +360,7 @@ export default defineComponent({
     provide("reloadPage", reloadPage);
 
     // 关闭左侧
-    const closeLeft = (route) => {
+    const closeLeft = (route: RouteItem) => {
       tabsViewStore.closeLeftTabs(route);
       state.activeKey = route.fullPath;
       router.replace(route.fullPath);
@@ -368,7 +368,7 @@ export default defineComponent({
     };
 
     // 关闭右侧
-    const closeRight = (route) => {
+    const closeRight = (route: RouteItem) => {
       tabsViewStore.closeRightTabs(route);
       state.activeKey = route.fullPath;
       router.replace(route.fullPath);
@@ -376,7 +376,7 @@ export default defineComponent({
     };
 
     // 关闭其他
-    const closeOther = (route) => {
+    const closeOther = (route: RouteItem) => {
       tabsViewStore.closeOtherTabs(route);
       state.activeKey = route.fullPath;
       router.replace(route.fullPath);
@@ -392,7 +392,7 @@ export default defineComponent({
     };
 
     // tab 操作
-    const closeHandleSelect = (key) => {
+    const closeHandleSelect = (key: string) => {
       switch (key) {
         // 刷新
         case "1":
@@ -410,6 +410,8 @@ export default defineComponent({
         case "4":
           closeAll();
           break;
+        default:
+          break;
       }
       updateNavScroll();
       state.showDropdown = false;
@@ -419,7 +421,7 @@ export default defineComponent({
      * @param value 要滚动到的位置
      * @param amplitude 每次滚动的长度
      */
-    function scrollTo(value: number, amplitude: number) {
+    function scrollTo(value: number, amplitude: number): number | undefined {
       const currentScroll = navScroll.value.scrollLeft;
       const scrollWidth =
         (amplitude > 0 && currentScroll + amplitude >= value) ||
@@ -478,7 +480,7 @@ export default defineComponent({
             navScroll.value.querySelectorAll(".tabs-card-scroll-item") || [];
           [...tagList].forEach((tag: HTMLElement) => {
             // fix SyntaxError
-            if (tag.id === `tag${state.activeKey.split("/").join("\/")}`) {
+            if (tag.id === `tag${state.activeKey.split("/").join("/")}`) {
               tag.scrollIntoView && tag.scrollIntoView();
             }
           });
@@ -508,7 +510,7 @@ export default defineComponent({
     }
 
     // tags 跳转页面
-    function goPage(e) {
+    function goPage(e: { fullPath: string }) {
       const { fullPath } = e;
       if (fullPath === route.fullPath) {
         return;
@@ -518,10 +520,10 @@ export default defineComponent({
     }
 
     // 删除tab
-    function closeTabItem(e) {
+    function closeTabItem(e: { fullPath: string }) {
       const { fullPath } = e;
       const routeInfo = tabsList.value.find(
-        (item) => item.fullPath == fullPath
+        (item) => item.fullPath === fullPath
       );
       removeTab(routeInfo);
     }
@@ -531,8 +533,7 @@ export default defineComponent({
     });
 
     function onElementResize() {
-      let observer;
-      observer = elementResizeDetectorMaker();
+      const observer = elementResizeDetectorMaker();
       observer.listenTo(navWrap.value, handleResize);
     }
 
