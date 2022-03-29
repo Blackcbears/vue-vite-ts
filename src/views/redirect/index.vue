@@ -16,7 +16,7 @@ export default defineComponent({
         query,
       });
     });
-    return () => <NEmpty />;
+    return () => <n-empty />;
   },
 });
 </script>

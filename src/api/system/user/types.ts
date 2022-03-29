@@ -1,5 +1,3 @@
-import { BasicResponseModel } from "@/api/system/user/index";
-
 /**
  * @name: types.ts
  * @author: CuiJing

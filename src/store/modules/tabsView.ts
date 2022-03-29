@@ -25,40 +25,40 @@ export const useTabsViewStore = defineStore({
       // 初始化标签页
       this.tabsList = routes;
     },
-    addTabs(route): boolean {
+    addTabs(route: RouteItem): boolean {
       // 添加标签页
-      if (whiteList.includes(route.name)) {
+      if (route.name && whiteList.includes(<string>route.name)) {
         return false;
       }
       const isExists = this.tabsList.some(
-        (item) => item.fullPath == route.fullPath
+        (item) => item.fullPath === route.fullPath
       );
       if (!isExists) {
         this.tabsList.push(route);
       }
       return true;
     },
-    closeLeftTabs(route) {
+    closeLeftTabs(route: RouteItem) {
       // 关闭左侧
       const index = this.tabsList.findIndex(
         (item) => item.fullPath === route.fullPath
       );
       this.tabsList.splice(0, index);
     },
-    closeRightTabs(route) {
+    closeRightTabs(route: RouteItem) {
       // 关闭右侧
       const index = this.tabsList.findIndex(
         (item) => item.fullPath === route.fullPath
       );
       this.tabsList.splice(index + 1);
     },
-    closeOtherTabs(route) {
+    closeOtherTabs(route: RouteItem) {
       // 关闭其他
       this.tabsList = this.tabsList.filter(
         (item) => item.fullPath === route.fullPath
       );
     },
-    closeCurrentTab(route) {
+    closeCurrentTab(route: RouteItem) {
       // 关闭当前页
       const index = this.tabsList.findIndex(
         (item) => item.fullPath === route.fullPath

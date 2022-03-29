@@ -1,5 +1,4 @@
-<template></template>
-<script lang="ts">
+<script lang="tsx">
 import { useMessage } from "naive-ui";
 
 export default {

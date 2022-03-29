@@ -134,15 +134,15 @@
 </template>
 
 <script lang="ts">
+import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
+import { AsideMenu } from "@/layout/components/Menu";
+import { useUserStore } from "@/store/modules/user";
+import { TABS_ROUTES } from "@/store/mutation-types";
+import { NDialogProvider, useDialog, useMessage } from "naive-ui";
 import { computed, defineComponent, reactive, ref, toRefs, unref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import components from "./components";
-import { NDialogProvider, useDialog, useMessage } from "naive-ui";
-import { TABS_ROUTES } from "@/store/mutation-types";
-import { useUserStore } from "@/store/modules/user";
 import ProjectSetting from "./ProjectSetting.vue";
-import { AsideMenu } from "@/layout/components/Menu";
-import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
 
 export default defineComponent({
   name: "PageHeader",
@@ -155,6 +155,7 @@ export default defineComponent({
       type: Boolean,
     },
   },
+  emits: ["update:collapsed"],
   setup(props) {
     const userStore = useUserStore();
     const message = useMessage();
@@ -236,6 +237,7 @@ export default defineComponent({
 
     // 刷新页面
     const reloadPage = () => {
+      console.log(unref(route).fullPath);
       router.push({
         path: "/redirect" + unref(route).fullPath,
       });
@@ -358,7 +360,7 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
   padding: 0;
-  height: @header-height;
+  height: $header-height;
   box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
   transition: all 0.2s ease-in-out;
   width: 100%;

@@ -5,6 +5,7 @@ export type Component<T = any> =
   | ReturnType<typeof defineComponent>
   | (() => Promise<typeof import("*.vue")>)
   | (() => Promise<T>);
+
 export type AppRouteRecordRaw = Omit<RouteRecordRaw, "meta"> & {
   name: string;
   meta: RouteMeta;

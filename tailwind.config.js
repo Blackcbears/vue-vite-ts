@@ -1,15 +1,11 @@
 module.exports = {
   mode: "jit",
   important: "#app",
-  // darkMode: 'class',
   plugins: [createEnterPlugin()],
   corePlugins: {
     backgroundColor: false,
   },
-  purge: {
-    enable: process.env.NODE_ENV === "production",
-    content: ["./index.html", "./src/**/*.{vue,ts,tsx}"],
-  },
+  content: ["./index.html", "./src/**/*.{vue,ts,tsx}"],
   theme: {
     extend: {
       zIndex: {

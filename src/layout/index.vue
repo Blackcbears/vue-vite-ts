@@ -32,7 +32,7 @@
       class="layout-side-drawer"
     >
       <Logo :collapsed="collapsed" />
-      <AsideMenu @clickMenuItem="collapsed = false" />
+      <AsideMenu @click-menu-item="collapsed = false" />
     </n-drawer>
 
     <n-layout :inverted="inverted">
@@ -63,10 +63,6 @@
             <MainView />
           </div>
         </div>
-        <!--1.15废弃，没啥用，占用操作空间-->
-        <!--        <NLayoutFooter v-if="getShowFooter">-->
-        <!--          <PageFooter />-->
-        <!--        </NLayoutFooter>-->
       </n-layout-content>
       <n-back-top :right="100" />
     </n-layout>
@@ -74,6 +70,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useLoadingBar } from "naive-ui";
 import { computed, onMounted, ref, unref } from "vue";
 import { Logo } from "./components/Logo";
 import { TabsView } from "./components/TagsView";
@@ -154,13 +151,6 @@ const leftMenuWidth = computed(() => {
   return collapsed.value ? minMenuWidth : menuWidth;
 });
 
-// const getChangeStyle = computed(() => {
-//   const { minMenuWidth, menuWidth } = unref(getMenuSetting);
-//   return {
-//     'padding-left': collapsed.value ? `${minMenuWidth}px` : `${menuWidth}px`,
-//   };
-// });
-
 const getMenuLocation = computed(() => {
   return "left";
 });
@@ -187,6 +177,8 @@ const watchWidth = () => {
 onMounted(() => {
   checkMobileMode();
   window.addEventListener("resize", watchWidth);
+  window.$loadingBar = useLoadingBar();
+  window.$loadingBar.finish();
 });
 </script>
 

@@ -6,7 +6,6 @@ import { ACCESS_TOKEN } from "@/store/mutation-types";
 import { storage } from "@/utils/Storage";
 import { PageEnum } from "@/enums/pageEnum";
 import { ErrorPageRoute } from "@/router/base";
-import { useLoadingBar } from "naive-ui";
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -16,7 +15,7 @@ export function createRouterGuards(router: Router) {
   const userStore = useUserStoreWidthOut();
   const asyncRouteStore = useAsyncRouteStoreWidthOut();
   router.beforeEach(async (to, from, next) => {
-    const Loading = useLoadingBar() || null;
+    const Loading = window.$loadingBar || null;
     Loading && Loading.start();
     if (from.path === LOGIN_PATH && to.name === "errorPage") {
       next(PageEnum.BASE_HOME);
@@ -64,7 +63,6 @@ export function createRouterGuards(router: Router) {
     const userInfo = await userStore.GetInfo();
 
     const routes = await asyncRouteStore.generateRoutes(userInfo);
-
     // 动态添加可访问路由表
     routes.forEach((item) => {
       router.addRoute(item as unknown as RouteRecordRaw);
@@ -105,7 +103,7 @@ export function createRouterGuards(router: Router) {
     ) {
       // 需要缓存的组件
       keepAliveComponents.push(currentComName);
-    } else if (!to.meta?.keepAlive || to.name == "Redirect") {
+    } else if (!to.meta?.keepAlive || to.name === "Redirect") {
       // 不需要缓存的组件
       const index = asyncRouteStore.keepAliveComponents.findIndex(
         (name) => name == currentComName
@@ -115,7 +113,7 @@ export function createRouterGuards(router: Router) {
       }
     }
     asyncRouteStore.setKeepAliveComponents(keepAliveComponents);
-    const Loading = useLoadingBar() || null;
+    const Loading = window.$loadingBar || null;
     Loading && Loading.finish();
   });
 

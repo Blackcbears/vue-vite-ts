@@ -1,5 +1,5 @@
 <template>
-  <NMenu
+  <n-menu
     :options="menus"
     :inverted="inverted"
     :mode="mode"
@@ -15,21 +15,21 @@
 </template>
 
 <script lang="ts">
+import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
+import { useAsyncRouteStore } from "@/store/modules/asyncRoute";
+import { useProjectSettingStore } from "@/store/modules/projectSetting";
+import { generatorMenu, generatorMenuMix } from "@/utils";
 import {
+  computed,
   defineComponent,
-  ref,
   onMounted,
   reactive,
-  computed,
-  watch,
+  ref,
   toRefs,
   unref,
+  watch,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useAsyncRouteStore } from "@/store/modules/asyncRoute";
-import { generatorMenu, generatorMenuMix } from "@/utils";
-import { useProjectSettingStore } from "@/store/modules/projectSetting";
-import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
 
 export default defineComponent({
   name: "Menu",
@@ -50,7 +50,7 @@ export default defineComponent({
       default: "left",
     },
   },
-  emits: ["update:collapsed"],
+  emits: ["update:collapsed", "clickMenuItem"],
   setup(props, { emit }) {
     // 当前路由
     const currentRoute = useRoute();
@@ -97,13 +97,6 @@ export default defineComponent({
         }
       }
     );
-
-    // 监听菜单收缩状态
-    // watch(
-    //   () => props.collapsed,
-    //   (newVal) => {
-    //   }
-    // );
 
     // 跟随页面路由变化，切换菜单选中状态
     watch(

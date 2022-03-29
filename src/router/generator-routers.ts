@@ -2,7 +2,7 @@ import { adminMenus } from "@/api/system/menu";
 import { constantRouterIcon } from "./router-icons";
 import { RouteRecordRaw } from "vue-router";
 import { Layout, ParentLayout } from "@/router/constant";
-import { AppRouteRecordRaw } from "@/router/types";
+import { AppRouteRecordRaw, Menu } from "@/router/types";
 
 const Iframe = () => import("@/views/iframe/index.vue");
 const LayoutMap = new Map<string, () => Promise<typeof import("*.vue")>>();
@@ -16,9 +16,12 @@ LayoutMap.set("IFRAME", Iframe);
  * @param parent
  * @returns {*}
  */
-export const routerGenerator = (routerMap: any, parent?: any): any[] => {
-  return routerMap.map((item: any) => {
-    const currentRouter: any = {
+export const routerGenerator = (
+  routerMap: AppRouteRecordRaw[],
+  parent?: any
+): any[] => {
+  return routerMap.map((item) => {
+    const currentRouter: AppRouteRecordRaw = {
       // 路由地址 动态拼接生成如 /dashboard/workplace
       path: `${(parent && parent.path) || ""}/${item.path}`,
       // 路由名称，建议唯一
@@ -28,9 +31,9 @@ export const routerGenerator = (routerMap: any, parent?: any): any[] => {
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
         ...item.meta,
-        label: item.meta.title,
-        icon: constantRouterIcon[item.meta.icon] || null,
-        permissions: item.meta.permissions || null,
+        label: item.meta?.title,
+        icon: item.meta || constantRouterIcon[item.meta.icon] || null,
+        permissions: item.meta?.permissions || null,
       },
     };
 

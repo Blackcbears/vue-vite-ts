@@ -1,10 +1,11 @@
+import { AppRouteRecordRaw } from "@/router/types";
 import { http } from "@/utils/http/axios";
 
 /**
  * @description: 根据用户id获取用户菜单
  */
 export function adminMenus() {
-  return http.request({
+  return http.request<AppRouteRecordRaw[]>({
     url: "/menus",
     method: "GET",
   });

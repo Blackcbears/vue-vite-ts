@@ -1,10 +1,10 @@
-import { toRaw, unref } from "vue";
-import { defineStore } from "pinia";
-import { RouteRecordRaw } from "vue-router";
-import { store } from "@/store";
+import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
 import { asyncRoutes, constantRouter } from "@/router";
 import { generatorDynamicRouter } from "@/router/generator-routers";
-import { useProjectSetting } from "@/hooks/setting/useProjectSetting";
+import { store } from "@/store";
+import { defineStore } from "pinia";
+import { toRaw, unref } from "vue";
+import { RouteRecordRaw } from "vue-router";
 
 interface TreeHelperConfig {
   id: string;
@@ -24,7 +24,7 @@ const getConfig = (config: Partial<TreeHelperConfig>) =>
 export interface IAsyncRouteState {
   menus: RouteRecordRaw[];
   routers: any[];
-  addRouters: any[];
+  addRouters: RouteRecordRaw[];
   keepAliveComponents: string[];
   isDynamicAddedRoute: boolean;
 }
@@ -75,15 +75,15 @@ export const useAsyncRouteStore = defineStore({
       this.isDynamicAddedRoute = added;
     },
     // 设置动态路由
-    setRouters(routers) {
-      this.addRouters = routers;
+    setRouters(routers?: RouteRecordRaw[]) {
+      this.addRouters = routers ?? [];
       this.routers = constantRouter.concat(routers);
     },
-    setMenus(menus) {
+    setMenus(menus?: RouteRecordRaw[]) {
       // 设置动态路由
-      this.menus = menus;
+      this.menus = menus || [];
     },
-    setKeepAliveComponents(compNames) {
+    setKeepAliveComponents(compNames: string[]) {
       // 设置需要缓存的组件
       this.keepAliveComponents = compNames;
     },
@@ -115,10 +115,10 @@ export const useAsyncRouteStore = defineStore({
           console.log(error);
         }
       }
-      accessedRouters = accessedRouters.filter(routeFilter);
+      accessedRouters = accessedRouters?.filter(routeFilter);
       this.setRouters(accessedRouters);
       this.setMenus(accessedRouters);
-      return toRaw(accessedRouters);
+      return toRaw(accessedRouters || []);
     },
   },
 });

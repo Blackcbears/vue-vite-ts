@@ -1,7 +1,7 @@
+import { setupStore } from "@/store";
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import { createPinia } from "pinia";
 import { setupDirectives } from "@/plugins/directives";
 import { setupRouter } from "@/router";
 import "./styles/tailwind.css";
@@ -11,8 +11,8 @@ meta.name = "naive-ui-style";
 document.head.appendChild(meta);
 
 const app = createApp(App);
-app.use(router);
-app.use(createPinia());
+// 注册pinia
+setupStore(app);
 // 增加组件
 setupDirectives(app);
 await setupRouter(app);
